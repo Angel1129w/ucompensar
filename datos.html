@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
+</head>
+<body>
+    <form id="myForm" action="nube.php" method="post">
+        <label>ID:</label>
+        <input type="text" id="ID" name="ID" />
+        <label>Nombre:</label>
+        <input type="text" id="Nombre" name="Nombre" placeholder="Escriba su nombre"/>
+        <br/>
+        <label>Edad:</label>
+        <input type="text" id="Edad" name="Edad" placeholder="Escriba su Edad"/>
+        <br/>
+        <button type="button" id="insertar">Insertar</button>
+        <button type="button" id="borrar">Borrar</button>
+        <button type="button" id="busqueda">Buscar</button>
+        <button type="button" id="actualizar">Actualizar</button>
+
+        <br>
+        <br>
+        <div id="respuesta"></div>
+    </form>
+
+    <script>
+     $(document).ready(function() {
+    $("#insertar").click(function() {
+        var id = $("#ID").val(); 
+        var nombre = $("#Nombre").val();
+        var edad = $("#Edad").val();
+        $.ajax({
+            url: 'nube.php',
+            method: 'POST',
+            data: { ID: id, Nombre: nombre, Edad: edad }, 
+            success: function(response) {
+                alert(response);
+            },
+            error: function(xhr, status, error) {
+                alert("Error en la solicitud AJAX: " + status + " - " + error);
+            }
+        });
+    });
+});
+
+$("#borrar").click(function() {
+    var id = $("#ID").val();
+
+    $.ajax({
+        url: 'nubeborrar.php',
+        method: 'POST',
+        data: { ID: id },
+        success: function(response) {
+            alert(response);
+        },
+        error: function(xhr, status, error) {
+            alert("Error en la solicitud AJAX: " + status + " - " + error);
+        }
+    });
+});
+
+
+            $("#busqueda").click(function() {
+    var id = $("#ID").val();
+
+    $.ajax({
+        url: 'nubebuscar.php',
+        method: 'POST',
+        data: { ID: id },
+        dataType: 'json',
+        success: function(response) {
+            if (response) {
+                $('#Nombre').val(response.nombre);
+                $('#Edad').val(response.edad);
+                alert("Usuario encontrado."); 
+            } else {
+                alert("Usuario no encontrado."); 
+            }
+        },
+        error: function(xhr, status, error) {
+            alert("Error en la solicitud AJAX: " + status + " - " + error);
+        }
+    });
+});
+
+        
+$("#actualizar").click(function() {
+    var id = $("#ID").val();
+    var nombre = $("#Nombre").val();
+    var edad = $("#Edad").val();
+
+    $.ajax({
+        url: 'nubeactualizar.php',
+        method: 'POST',
+        data: { ID: id, Nombre: nombre, Edad: edad },
+        dataType: 'json',
+        success: function(response) {
+            if (response) {
+                alert("Usuario actualizado correctamente."); 
+            } else {
+                alert("Error al actualizar usuario."); 
+            }
+        },
+        error: function(xhr, status, error) {
+            alert("Error en la solicitud AJAX: " + status + " - " + error);
+        }
+    });
+});
+
+
+    </script>
+</body>
+</html>
